@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250408112118_First")]
-    partial class First
+    [Migration("20250408114514_Right")]
+    partial class Right
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,7 +52,7 @@ namespace API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Films");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("API.Model.User", b =>

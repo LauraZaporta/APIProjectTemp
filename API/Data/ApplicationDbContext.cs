@@ -6,8 +6,7 @@ namespace API.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
-        public DbSet<Game> Films { get; set; }
-        public DbSet<User> Genres { get; set; }
+        public DbSet<Game> Games { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

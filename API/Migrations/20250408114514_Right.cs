@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class Right : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -157,7 +157,7 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Films",
+                name: "Games",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -169,9 +169,9 @@ namespace API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Films", x => x.Id);
+                    table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Films_AspNetUsers_UserId",
+                        name: "FK_Games_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -217,8 +217,8 @@ namespace API.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Films_UserId",
-                table: "Films",
+                name: "IX_Games_UserId",
+                table: "Games",
                 column: "UserId");
         }
 
@@ -241,7 +241,7 @@ namespace API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Films");
+                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -49,7 +49,7 @@ namespace API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Films");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("API.Model.User", b =>
