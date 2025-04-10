@@ -121,6 +121,25 @@ namespace API.Controllers
         }
 
         // Eliminació de jocs
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+
+        //Dintre del client fer un regex i que es pugui seleccionar amb el nom, una vegada trobat -> id a la funció.
+        public async Task<ActionResult<Game>> DeleteGame(int id)
+        {
+            try
+            {
+                var game = await _context.Games.FindAsync(id);
+                if (game == null) { return NotFound("El joc a eliminar no trobat"); }
+                _context.Games.Remove(game);
+                await _context.SaveChangesAsync();
+                return Ok($"Joc {game.Title} deleted");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error en l'eliminació: {ex.Message}");
+            }
+        }
 
         // Votació
 
