@@ -4,6 +4,6 @@ namespace API.Model
 {
     public class User : IdentityUser
     {
-        public IList<Game> VotedGames { get; set; }
+        public IList<Game> VotedGames { get; set; } = new List<Game>();
     }
 }

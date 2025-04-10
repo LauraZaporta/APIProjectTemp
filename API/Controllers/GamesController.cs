@@ -105,12 +105,11 @@ namespace API.Controllers
             {
                 var game = await _context.Games.FindAsync(gameInput.Title);
                 if (game == null) { return NotFound("El joc a actualitzar no trobat"); }
-                else
-                {
-                    game.Title = gameInput.Title;
-                    game.Description = gameInput.Description;
-                    game.TeamName = gameInput.TeamName;
-                }
+
+                game.Title = gameInput.Title;
+                game.Description = gameInput.Description;
+                game.TeamName = gameInput.TeamName;
+
                 await _context.SaveChangesAsync();
                 return Ok($"Joc {game.Title} actualitzat!");
             }
@@ -133,11 +132,35 @@ namespace API.Controllers
                 if (game == null) { return NotFound("El joc a eliminar no trobat"); }
                 _context.Games.Remove(game);
                 await _context.SaveChangesAsync();
-                return Ok($"Joc {game.Title} deleted");
+                return Ok($"Joc {game.Title} eliminat");
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error en l'eliminació: {ex.Message}");
+            }
+        }
+
+        // Votació
+        [Authorize] //Per tots els rols existents
+        [HttpPut("vote")]
+        public async Task<ActionResult<Game>> VoteGame(int id)
+        {
+            try
+            {
+                var game = await _context.Games.FindAsync(id);
+                var user = await _context.Users.FindAsync(User.Identity.Name);
+                
+                if (game == null || user == null) { return NotFound("El joc a votar no trobat o l'usuari no és vàlid"); }
+
+                game.UsersWhoVoted.Add(user);
+                user.VotedGames.Add(game);
+                await _context.SaveChangesAsync();
+
+                return Ok($"Joc {game.Title} votat!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error en la votació: {ex.Message}");
             }
         }
     }
