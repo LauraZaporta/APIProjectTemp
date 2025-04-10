@@ -140,8 +140,5 @@ namespace API.Controllers
                 return BadRequest($"Error en l'eliminació: {ex.Message}");
             }
         }
-
-        // Votació
-
     }
 }

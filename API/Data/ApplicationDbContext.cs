@@ -18,9 +18,18 @@ namespace API.Data
             optionsBuilder.UseSqlServer(connString);
         }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Game>()
+                .HasMany(g => g.UsersWhoVoted)
+                .WithMany(u => u.VotedGames);
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.VotedGames)
+                .WithMany(g => g.UsersWhoVoted);
         }
     }
 }

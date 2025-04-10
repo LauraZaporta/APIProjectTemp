@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250408114514_Right")]
-    partial class Right
+    [Migration("20250410105710_HasManyAdded")]
+    partial class HasManyAdded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,12 +45,7 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Games");
                 });
@@ -118,6 +113,21 @@ namespace API.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("GameUser", b =>
+                {
+                    b.Property<string>("UsersWhoVotedId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("VotedGamesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsersWhoVotedId", "VotedGamesId");
+
+                    b.HasIndex("VotedGamesId");
+
+                    b.ToTable("GameUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -253,11 +263,19 @@ namespace API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("API.Model.Game", b =>
+            modelBuilder.Entity("GameUser", b =>
                 {
                     b.HasOne("API.Model.User", null)
-                        .WithMany("VotedGames")
-                        .HasForeignKey("UserId");
+                        .WithMany()
+                        .HasForeignKey("UsersWhoVotedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Model.Game", null)
+                        .WithMany()
+                        .HasForeignKey("VotedGamesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -309,11 +327,6 @@ namespace API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("API.Model.User", b =>
-                {
-                    b.Navigation("VotedGames");
                 });
 #pragma warning restore 612, 618
         }
