@@ -74,31 +74,51 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Game>> InsertGame(GameDTO gameInput) //https://youtu.be/TMWWpjFXiCc
         {
-            if (gameInput != null) {
-                try
-                {
-                    var game = new Game
-                    {
-                        Title = gameInput.Title,
-                        Description = gameInput.Description,
-                        TeamName = gameInput.TeamName
-                    };
-                    _context.Games.Add(game);
-                    await _context.SaveChangesAsync();
-                    return Ok($"Joc {game.Title} inserit!");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest($"Error en la inserció: {ex.Message}");
-                }
-            } 
-            else
+            if (gameInput == null) { return BadRequest("No hi ha dades a inserir; el joc és buit!"); }
+
+            try
             {
-                return BadRequest("No hi ha dades a inserir; el joc és buit!");
+                var game = new Game
+                {
+                    Title = gameInput.Title,
+                    Description = gameInput.Description,
+                    TeamName = gameInput.TeamName
+                };
+                _context.Games.Add(game);
+                await _context.SaveChangesAsync();
+                return Ok($"Joc {game.Title} inserit!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error en la inserció: {ex.Message}");
             }
         }
 
         // Edició de jocs
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        public async Task<ActionResult<Game>> UpdateGame(GameDTO gameInput)
+        {
+            if (gameInput == null) { return BadRequest("No hi ha dades a inserir; el joc és buit!"); }
+
+            try
+            {
+                var game = await _context.Games.FindAsync(gameInput.Title);
+                if (game == null) { return NotFound("El joc a actualitzar no trobat"); }
+                else
+                {
+                    game.Title = gameInput.Title;
+                    game.Description = gameInput.Description;
+                    game.TeamName = gameInput.TeamName;
+                }
+                await _context.SaveChangesAsync();
+                return Ok($"Joc {game.Title} actualitzat!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error en la inserció: {ex.Message}");
+            }
+        }
 
         // Eliminació de jocs
 
