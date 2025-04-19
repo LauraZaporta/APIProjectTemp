@@ -99,11 +99,12 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult<Game>> UpdateGame(GameDTO gameInput)
         {
-            if (gameInput == null) { return BadRequest("No hi ha dades a inserir; el joc és buit!"); }
+            if (gameInput == null) { return BadRequest("No hi ha dades a actualitzar; el joc és buit!"); }
 
             try
             {
-                var game = await _context.Games.FindAsync(gameInput.Title);
+                var games = await _context.Games.ToListAsync();
+                var game = games.Where(g => g.Title == gameInput.Title).FirstOrDefault();
                 if (game == null) { return NotFound("El joc a actualitzar no trobat"); }
 
                 game.Title = gameInput.Title;
@@ -115,7 +116,7 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error en la inserció: {ex.Message}");
+                return BadRequest($"Error en l'actualització: {ex.Message}");
             }
         }
 
@@ -148,7 +149,7 @@ namespace API.Controllers
             try
             {
                 var game = await _context.Games.FindAsync(id);
-                var user = await _context.Users.FindAsync(User.Identity.Name);
+                var user = await _context.Users.FindAsync(User.Identity.Name); //NO FUNCIONA
                 
                 if (game == null || user == null) { return NotFound("El joc a votar no trobat o l'usuari no és vàlid"); }
 
